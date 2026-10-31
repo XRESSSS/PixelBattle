@@ -1,8 +1,10 @@
 package pixelbattle.heroes;
 
+import pixelbattle.core.Fighter;
 import pixelbattle.core.Hero;
 import pixelbattle.core.Skill;
 import pixelbattle.core.Target;
+import pixelbattle.core.Ultimate;
 import pixelbattle.engine.Sprite;
 
 /** Лицар — міцний воїн ближнього бою. */
@@ -23,18 +25,30 @@ public class Knight extends Hero {
             return user.getName() + " піднімає щит і стає в захист!";
         }));
 
-        // TODO 7: ультимейт «Небесний молот» — АНОНІМНИЙ КЛАС, що реалізує Ultimate:
-        //   кожному ЖИВОМУ ворогу 15 шкоди та оглушення на 1 хід.
-        //   (не забудьте import pixelbattle.core.Ultimate; та import pixelbattle.core.Fighter;)
-        //
-        //   setUltimate(new Ultimate() {
-        //       @Override public String getName() { return "Небесний молот"; }
-        //       @Override public String getDescription() { return "..."; }
-        //       @Override public String activate(Fighter user, Fighter[] allies, Fighter[] enemies) {
-        //           for (Fighter e : enemies) { ... }
-        //           return "...";
-        //       }
-        //   });
+// TODO 7: ультимейт «Небесний молот»
+        setUltimate(new Ultimate() {
+            @Override
+            public String getName() {
+                return "Небесний молот";
+            }
+
+            @Override
+            public String getDescription() {
+                return "Завдає 15 шкоди та оглушує всіх ворогів на 1 хід";
+            }
+
+            @Override
+            public String activate(Fighter user, Fighter[] allies, Fighter[] enemies) {
+                int totalDmg = 0;
+                for (Fighter e : enemies) {
+                    if (e.isAlive()) {
+                        totalDmg += e.takeDamage(15);
+                        e.stun(1);
+                    }
+                }
+                return user.getName() + " обрушує Небесний молот! Всі вороги оглушені (" + totalDmg + " шкоди)";
+            }
+        });
     }
 
     // TODO 4: пасивка «Важка броня»
